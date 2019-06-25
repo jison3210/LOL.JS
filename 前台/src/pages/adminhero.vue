@@ -328,7 +328,9 @@
 				});
 			},
 			gouser (){
-				
+					this.$router.push({
+						path: '/adminuser'
+					});
 			},
 			gosnews(){
 				this.$router.push({

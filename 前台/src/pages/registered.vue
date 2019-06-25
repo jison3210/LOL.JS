@@ -46,6 +46,11 @@
 						<FormItem label="Phone" prop="phone">
 							<Input v-model="formValidate.phone" placeholder="请输入你的手机号"></Input>
 						</FormItem>
+						<FormItem label="Title" prop="usrc">
+							<div>
+								<input type="file" name="file" accept=".jpg, .jpeg, .png" @change="uploadAvatar">
+							</div>
+						</FormItem>
 						<FormItem>
 							<Button @click="handleReset('formValidate')" style="margin-left: -100px" >清空</Button>
 							<Button type="primary" @click="handleSubmit('formValidate')" style="margin-left: 20px">注册</Button>
@@ -84,6 +89,10 @@
 				}
 			};
 			return {
+				
+				uploadList: [],
+				visible: false,
+				tupiansrc:'http://localhost:3000/uploads/',
 				formValidate: {
 					name: '',
 					mail: '',
@@ -92,7 +101,9 @@
 					phone: '',
 					userPower: 0,
 					userAdmin: false,
-					userStop: false
+					userStop: false,
+					usrc:'',
+					productlogo:''
 				},
 				ruleValidate: {
 					name: [{
@@ -132,6 +143,20 @@
 			}
 		},
 		methods: {
+			uploadAvatar(avatar) {
+        console.log(avatar.target.files[0])
+        let file = avatar.target.files[0]
+      let data = new FormData();
+      data.append("file", file, file.name);//很重要 data.append("file", file);不成功
+      data.append('data',112)
+      console.log(data.get('file'))
+      return this.axios.post("http://localhost:3000/users/file", data, {
+        headers: { "content-type": "multipart/form-data" }
+      }).then((data)=>{
+		  console.log(data)
+		  this.usersrc = data.data.filename
+	  });
+    },
 			handleSubmit(name) {
 				this.$refs[name].validate((valid) => {
 							if (valid) {
@@ -142,7 +167,8 @@
 									userPhone: this.formValidate.phone,
 									userPower: 0,
 									userAdmin: false,
-									userStop: false
+									userStop: false,
+									usersrc: this.tupiansrc+this.usersrc
 								}).then((data) => {
 										if (data.data.status == 1) {
 											this.$Message.error(data.data.message);

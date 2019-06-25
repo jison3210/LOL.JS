@@ -213,7 +213,9 @@
 				});
 			},
 			gouser(){
-				
+					this.$router.push({
+						path: '/adminuser'
+					});
 			},
 			search() {
 				var len = this.tableData

@@ -10,6 +10,7 @@ import gamelist from '../pages/gamelist.vue'
 import news from '../pages/news.vue'
 import admin from '../pages/admin.vue'
 import adminhero from '../pages/adminhero.vue'
+import adminuser from '../pages/adminUser.vue'
 
 Vue.use(Router)
 Vue.use(VueResource)
@@ -62,6 +63,11 @@ export default new Router({
 			//管理英雄界面
 			path:'/adminhero',
 			component:adminhero
+		},
+		{
+			//管理用户界面
+			path:'/adminuser',
+			component:adminuser
 		}
   ],
 })
