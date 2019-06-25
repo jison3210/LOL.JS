@@ -7,7 +7,8 @@ var user = new mongoose.Schema({
     userPhone: String,
     userPower: Number,
 	userAdmin: Boolean,
-	userStop: Boolean
+	userStop: Boolean,
+	usersrc:String
 })
 user.statics.findAll = function(callBack){
     this.find({},callBack);

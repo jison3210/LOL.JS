@@ -97,6 +97,7 @@ router.post('/newDel', function (req, res, next) {
 );
 //修改后台添加的新闻
 router.post('/newUpdate', function (req, res, next) {
+
 	if (!req.body.newsId) {
 	    res.json({status: 1, message: "新闻id传递失败"})
 	}
@@ -115,6 +116,12 @@ router.post('/newUpdate', function (req, res, next) {
     if (!req.body.newssrc) {
         res.json({status: 1, message: "新闻的图片为空"})
     }
+		var photo = /\.jpg$|\.jpeg$|\.gif$/i
+	if(!photo.test(req.body.newssrc)){
+	    res.json({status: 1, message: '请使用jpg、jpeg、gif格式的图片'})
+	    photo.focus();
+	    return false;
+	};
     if (!req.body.newstype) {
         res.json({status: 1, message: "新闻的类型为空"})
     }
@@ -293,6 +300,36 @@ router.post('/powerUpdate', function (req, res, next) {
                 res.json({error: 1, message: "用户没有获得权限或者已经停用"})
             }
         })
+    } else {
+        res.json({status: 1, message: check.message})
+    }
+});
+//恢复权利
+router.post('/unban', function (req, res, next) {
+    if (!req.body.userId) {
+        res.json({status: 1, message: "用户id传递失败"})
+    }
+    if (!req.body.username) {
+        res.json({status: 1, message: "用户名为空"})
+    }
+    if (!req.body.token) {
+        res.json({status: 1, message: "登录出错"})
+    }
+    if (!req.body.id) {
+        res.json({status: 1, message: "用户传递错误"})
+    }
+    var check = checkAdminPower(req.body.username, req.body.token, req.body.id)
+    if (check.error == 0) {
+        user.findByUsername(req.body.username, function (err, findUser) {
+            if (findUser[0].userAdmin && !findUser[0].userStop) {
+                user.update({_id: req.body.userId}, {userStop: false}, function (err, updateUser) {
+                    res.json({status: 0, message: '封停成功', data: updateUser})
+                })
+            } else {
+                res.json({error: 1, message: "用户没有获得权限或者已经停用"})
+            }
+        })
+
     } else {
         res.json({status: 1, message: check.message})
     }
